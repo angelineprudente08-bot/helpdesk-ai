@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Ticket #{{ ticket.id }} - HelpDesk AI{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h1 class="h4">#{{ ticket.id }} {{ ticket.title }}</h1>
+        <p class="text-muted small mb-2">From {{ ticket.requester }} on {{ ticket.created_at }}</p>
+        <p style="white-space: pre-wrap">{{ ticket.description }}</p>
+        <p class="mb-1"><b>Status:</b> <span class="badge bg-secondary">{{ ticket.status }}</span></p>
+        <p class="mb-1"><b>Technician:</b> {{ ticket.technician or "Not assigned" }}</p>
+        <p class="mb-1"><b>Category:</b> {{ ticket.category or "Manual triage required" }}</p>
+        <p class="mb-1"><b>Priority:</b> {{ ticket.priority or "Manual triage required" }}</p>
+<p class="mb-1"><b>Recommended team:</b> {{ team or "Not decided yet" }}</p>
+        {% if ticket.resolution %}
+          <div class="alert alert-success mt-3 mb-0"><b>Solution:</b> {{ ticket.resolution }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h6">Conversation</h2>
+        {% for m in messages %}
+          <div class="border rounded p-2 mb-2 {% if m.is_automated %}bg-light{% endif %}">
+            <div class="small text-muted mb-1">
+              {% if m.is_automated %}HelpDesk AI (automatic message){% else %}{{ m.name }} ({{ m.role }}){% endif %}
+              · {{ m.created_at }}
+            </div>
+            <div style="white-space: pre-wrap">{{ m.body }}</div>
+          </div>
+        {% else %}
+          <p class="small text-muted">No messages yet.</p>
+        {% endfor %}
+        {% if ticket.status != "Closed" %}
+          <form method="post" class="mt-3">
+            <input type="hidden" name="action" value="message">
+            <textarea class="form-control mb-2" name="body" rows="3" placeholder="Write a message" required></textarea>
+            <button class="btn btn-primary btn-sm">Send</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6">History</h2>
+        <ul class="list-unstyled small mb-0">
+          {% for h in history %}
+            <li class="mb-1"><span class="text-muted">{{ h.created_at }}</span> {{ h.name }}: {{ h.detail }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {% if is_staff %}
+  <div class="col-lg-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h6">Model recommendation</h2>
+        {% if prediction and prediction.category %}
+          <p class="small mb-1">Category: {{ prediction.category }} ({{ (prediction.category_score * 100)|round|int }}%)</p>
+          <p class="small mb-1">Priority: {{ prediction.priority }} ({{ (prediction.priority_score * 100)|round|int }}%)</p>
+          <p class="small text-muted mb-0">Model version {{ prediction.model_version }}</p>
+        {% else %}
+          <p class="small text-muted mb-0">No prediction for this ticket.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-3">
+{% if session.role == 'administrator' %}
+      <div class="card-body">
+        <h2 class="h6">Assign technician</h2>
+        <form method="post">
+          <input type="hidden" name="action" value="assign">
+          <select class="form-select mb-2" name="technician_id">
+            {% for t in technicians %}
+              <option value="{{ t.id }}" {% if t.id == ticket.technician_id %}selected{% endif %}>{{ t.name }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-primary btn-sm">Assign</button>
+        </form>
+      </div>
+    </div>
+{% endif %}
+
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h6">Confirm or correct classification</h2>
+        <form method="post">
+          <input type="hidden" name="action" value="classify">
+          <label class="form-label small">Category</label>
+          <select class="form-select mb-2" name="category">
+            {% for c in categories %}
+              <option {% if c.name == (ticket.category or (prediction and prediction.category)) %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+          </select>
+          <label class="form-label small">Priority</label>
+          <select class="form-select mb-2" name="priority">
+            {% for p in priorities %}
+              <option {% if p == (ticket.priority or (prediction and prediction.priority)) %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-primary btn-sm">Save classification</button>
+        </form>
+      </div>
+    </div>
+
+    {% if next_statuses %}
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6">Change status</h2>
+        <form method="post">
+          <input type="hidden" name="action" value="status">
+          <select class="form-select mb-2" name="status">
+            {% for s in next_statuses %}<option>{{ s }}</option>{% endfor %}
+          </select>
+          <textarea class="form-control mb-2" name="resolution" rows="3" placeholder="Solution (required when resolving)"></textarea>
+          <button class="btn btn-primary btn-sm">Update status</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

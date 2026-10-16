@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My Tickets - HelpDesk AI{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">My tickets</h1>
+<div class="card shadow-sm">
+  <table class="table mb-0">
+    <thead><tr><th>#</th><th>Title</th><th>Category</th><th>Priority</th><th>Status</th><th>Created</th></tr></thead>
+    <tbody>
+      {% for t in tickets %}
+        <tr>
+          <td>{{ t.id }}</td>
+          <td><a href="{{ url_for('ticket_detail', ticket_id=t.id) }}">{{ t.title }}</a></td>
+          <td>{{ t.category or "Needs review" }}</td>
+          <td>{{ t.priority or "Needs review" }}</td>
+          <td><span class="badge bg-secondary">{{ t.status }}</span></td>
+          <td>{{ t.created_at }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="text-muted">You have no tickets yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

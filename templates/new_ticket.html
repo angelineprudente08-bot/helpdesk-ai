@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}New Ticket - HelpDesk AI{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h1 class="h4 mb-3">Submit a ticket</h1>
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input class="form-control" name="title" maxlength="150" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Describe the problem</label>
+        <textarea class="form-control" name="description" rows="5" required></textarea>
+      </div>
+      <button class="btn btn-primary">Submit ticket</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

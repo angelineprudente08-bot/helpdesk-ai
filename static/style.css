@@ -1,0 +1,143 @@
+/* HelpDesk AI colors (plum palette) */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap");
+
+:root {
+  --night: #190019;
+  --indigo: #2B124C;
+  --plum: #522B5B;
+  --mauve: #854F6C;
+  --rose: #DFB6B2;
+  --cream: #FBE4D8;
+  --paper: #fff7f2;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--night);
+}
+
+/* Page layout: sidebar on the left, content on the right */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 230px;
+  flex-shrink: 0;
+  background: var(--indigo);
+  color: var(--rose);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.brand {
+  color: var(--cream);
+  font-weight: 800;
+  font-size: 1.2rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand:hover { color: #fff; }
+.logo { width: 30px; height: 30px; border-radius: 8px; background: var(--mauve); }
+
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+.sidebar nav a {
+  color: var(--rose);
+  text-decoration: none;
+  padding: 9px 12px;
+  border-radius: 8px;
+}
+.sidebar nav a:hover { background: var(--plum); color: var(--cream); }
+.sidebar nav a.active { background: var(--plum); color: var(--cream); font-weight: 700; }
+
+.user { margin-top: auto; border-top: 1px solid var(--plum); padding-top: 16px; color: var(--cream); }
+.user small { display: block; color: var(--rose); text-transform: capitalize; }
+
+.content { flex: 1; padding: 32px; min-width: 0; }
+
+/* Phones: sidebar goes on top */
+@media (max-width: 768px) {
+  .app { flex-direction: column; }
+  .sidebar { width: auto; }
+  .user { margin-top: 0; }
+  .content { padding: 20px 16px; }
+}
+
+/* Bootstrap pieces in plum */
+.card { background: var(--paper); border: 1px solid var(--rose); border-radius: 12px; }
+.shadow-sm { box-shadow: 0 2px 6px rgba(43, 18, 76, 0.08) !important; }
+h1, h2, h3, h4, h5, h6, .h3, .h4, .h6 { color: var(--indigo); font-weight: 700; }
+a { color: var(--plum); }
+a:hover { color: var(--mauve); }
+.text-muted { color: var(--mauve) !important; }
+
+.btn-primary { background: var(--plum); border-color: var(--plum); }
+.btn-primary:hover, .btn-primary:focus { background: var(--indigo); border-color: var(--indigo); }
+
+.form-control:focus, .form-select:focus { border-color: var(--mauve); box-shadow: 0 0 0 .2rem rgba(133, 79, 108, .25); }
+
+.table { --bs-table-bg: transparent; }
+.table thead th {
+  background: var(--plum);
+  color: var(--cream);
+  font-size: .8rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.table td { border-color: #f0d5cc; }
+
+.badge.bg-secondary { background: var(--plum) !important; }
+.badge.bg-warning {
+  background: transparent !important;
+  color: var(--mauve) !important;
+  border: 1px dashed var(--mauve);
+}
+
+.alert-success { background: #f3e3ec; border-color: var(--rose); color: var(--plum); }
+
+/* ---- Design step 2: boxed menu links, home hero, alert colors ---- */
+.sidebar nav { gap: 8px; }
+.sidebar nav a {
+  background: var(--plum);
+  color: var(--cream);
+  border: 1px solid var(--mauve);
+}
+.sidebar nav a:hover { background: var(--mauve); color: #fff; }
+.sidebar nav a.active { background: var(--rose); color: var(--night); border-color: var(--rose); }
+
+.hero {
+  max-width: 820px;
+  margin: 40px auto;
+  padding: 64px 40px;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid var(--rose);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(43, 18, 76, 0.12);
+}
+.hero .logo { display: inline-block; width: 64px; height: 64px; border-radius: 16px; margin-bottom: 20px; }
+.hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 12px; }
+.hero p { font-size: 1.25rem; color: var(--mauve); margin-bottom: 32px; }
+.hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; }
+.btn-outline-plum { border: 2px solid var(--plum); color: var(--plum); background: transparent; }
+.btn-outline-plum:hover { background: var(--plum); color: var(--cream); }
+@media (max-width: 768px) {
+  .hero { padding: 40px 20px; margin: 16px auto; }
+  .hero h1 { font-size: 2rem; }
+}
+
+.alert-info { background: #f3e3ec; border-color: var(--rose); color: var(--plum); }
+.alert-warning { background: #fbefd9; border-color: #e9cfa0; color: #6b4a12; }
+.alert-danger { background: #f8dcdc; border-color: #e7b3b3; color: #7a1f2b; }
+
+/* ---- Design step 3: no sidebar for visitors ---- */
+.guest {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+.guest .alert { width: 100%; max-width: 820px; margin: 0 auto 16px; }
+.guest .hero { margin: 0 auto; width: 100%; }

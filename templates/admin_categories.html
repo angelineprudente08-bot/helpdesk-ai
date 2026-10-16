@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Manage Categories - HelpDesk AI{% endblock %}
+{% block content %}
+<h3 class="mb-3">Manage Categories and Teams</h3>
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <table class="table align-middle">
+      <thead>
+        <tr><th>Category</th><th>Team</th></tr>
+      </thead>
+      <tbody>
+        {% for c in categories %}
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>
+            <form method="post" class="d-flex gap-2">
+              <input type="hidden" name="action" value="update">
+              <input type="hidden" name="name" value="{{ c.name }}">
+              <input name="team" class="form-control form-control-sm" value="{{ c.team }}">
+              <button class="btn btn-sm btn-primary">Save</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5>Add a category</h5>
+    <form method="post" class="d-flex gap-2">
+      <input type="hidden" name="action" value="add">
+      <input name="name" class="form-control" placeholder="Category name">
+      <input name="team" class="form-control" placeholder="Team name">
+      <button class="btn btn-success">Add</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

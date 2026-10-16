@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Reports - HelpDesk AI{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Reports</h3>
+  <a class="btn btn-primary" href="{{ url_for('admin_reports_csv') }}">Download CSV</a>
+</div>
+
+<div class="row g-3 mb-4">
+  {% for s in statuses %}
+  <div class="col-6 col-md-4 col-xl-2">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="small text-muted">{{ s }}</div>
+        <div class="h3 mb-0">{{ counts.get(s, 0) }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5>Average resolution time</h5>
+        {% if avg_hours is not none %}
+          <div class="h3 mb-0">{{ "%.1f"|format(avg_hours) }} hours</div>
+        {% else %}
+          <p class="text-muted mb-0">No resolved tickets yet.</p>
+        {% endif %}
+        <div class="small text-muted mt-2">{{ total }} tickets in total</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5>Technician agreement with the model</h5>
+        {% if agree.reviewed %}
+          <p class="mb-1">Category: {{ (100 * agree.same_category / agree.reviewed)|round|int }}%</p>
+          <p class="mb-1">Priority: {{ (100 * agree.same_priority / agree.reviewed)|round|int }}%</p>
+          <div class="small text-muted">Based on {{ agree.reviewed }} reviewed tickets</div>
+        {% else %}
+          <p class="text-muted mb-0">No tickets have been reviewed yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

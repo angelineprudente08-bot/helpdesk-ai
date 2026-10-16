@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Ticket Queue - HelpDesk AI{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Ticket queue</h1>
+<div class="card shadow-sm">
+  <table class="table mb-0 align-middle">
+    <thead><tr><th>#</th><th>Title</th><th>Requester</th><th>Category</th><th>Priority</th><th>Status</th></tr></thead>
+    <tbody>
+      {% for t in tickets %}
+        <tr>
+          <td>{{ t.id }}</td>
+          <td><a href="{{ url_for('ticket_detail', ticket_id=t.id) }}">{{ t.title }}</a></td>
+          <td>{{ t.requester }}</td>
+          <td>
+            {% if t.category %}{{ t.category }}
+            {% else %}<span class="badge bg-warning text-dark">Manual triage required</span>{% endif %}
+            {% if t.suggested_category %}
+              <div class="small text-muted">Model: {{ t.suggested_category }} ({{ (t.category_score * 100)|round|int }}%)</div>
+            {% endif %}
+          </td>
+          <td>
+            {% if t.priority %}{{ t.priority }}
+            {% else %}<span class="badge bg-warning text-dark">Manual triage required</span>{% endif %}
+            {% if t.suggested_priority %}
+              <div class="small text-muted">Model: {{ t.suggested_priority }} ({{ (t.priority_score * 100)|round|int }}%)</div>
+            {% endif %}
+          </td>
+          <td><span class="badge bg-secondary">{{ t.status }}</span></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="text-muted">No tickets yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
